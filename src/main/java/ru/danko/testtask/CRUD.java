@@ -201,6 +201,7 @@ public class CRUD{
             String output = "Student #%d: %s %s, group number - %s, graduation year - %s";*/
             System.out.println("Student №"+count+": Name - "+name+", Surname - "+surname+", Group number - "+number+", Graduation year - "+graduationYear);
         }
+        count = 1;
     }
 
 

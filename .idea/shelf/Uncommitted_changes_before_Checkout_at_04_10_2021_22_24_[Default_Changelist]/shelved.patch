@@ -1,0 +1,131 @@
+Index: src/main/java/ru/danko/testtask/dao/impl/StudentDaoImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.danko.testtask.dao.impl;\r\n\r\nimport ru.danko.testtask.dao.StudentDao;\r\nimport ru.danko.testtask.dao.connection.DbcpDataSource;\r\nimport ru.danko.testtask.entity.Student;\r\nimport ru.danko.testtask.exception.DaoException;\r\n\r\nimport java.sql.*;\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\nimport java.util.Optional;\r\n\r\npublic class StudentDaoImpl implements StudentDao {\r\n\r\n    private static final StudentDaoImpl INSTANCE = new StudentDaoImpl();\r\n    private static final String FIND_STUDENT_BY_NAME_AND_SURNAME = \"SELECT studentsdatabase.student.id, \" +\r\n            \"studentsdatabase.student.name, studentsdatabase.student.surname \" +\r\n            \"FROM studentsdatabase.student WHERE name=? AND surname=?\";\r\n    private static final String FIND_STUDENT_BY_ID = \"SELECT studentsdatabase.student.id, studentsdatabase.student.name,\" +\r\n            \"studentsdatabase.student.surname FROM studentsdatabase.student WHERE id=?\";\r\n    private static final String FIND_STUDENT_BY_NAME = \"SELECT studentsdatabase.student.id, studentsdatabase.student.name,\" +\r\n            \"studentsdatabase.student.surname FROM studentsdatabase.student WHERE name=?\";\r\n    private static final String FIND_STUDENT_BY_SURNAME = \"SELECT studentsdatabase.student.id, studentsdatabase.student.name,\" +\r\n            \"studentsdatabase.student.surname FROM studentsdatabase.student WHERE surname=?\";\r\n    private static final String FIND_ALL = \"SELECT studentsdatabase.student.id, studentsdatabase.student.name,\" +\r\n            \"studentsdatabase.student.surname FROM studentsdatabase.student\";\r\n    private static final String ADD_STUDENT = \"INSERT INTO studentsdatabase.student (name,surname) values (?,?)\";\r\n    private static final String UPDATE_STUDENT = \"UPDATE studentsdatabase.student SET name=?, surname=? WHERE id=?\";\r\n    private static final String DELETE_STUDENT  = \"DELETE FROM studentsdatabase.student WHERE id=?\";\r\n\r\n    private StudentDaoImpl() {\r\n    }\r\n\r\n    public static StudentDaoImpl getInstance() {\r\n        return INSTANCE;\r\n    }\r\n\r\n    @Override\r\n    public Optional<Student> findByNameAndSurname(String name, String surname) throws DaoException {\r\n        try (Connection connection = DbcpDataSource.getConnection()) {\r\n            PreparedStatement statement = connection.prepareStatement(FIND_STUDENT_BY_NAME_AND_SURNAME);\r\n            statement.setString(1, name);\r\n            statement.setString(2, surname);\r\n            ResultSet resultSet = statement.executeQuery();\r\n            Optional<Student> studentOptional = Optional.empty();\r\n            if (resultSet.next()) {\r\n                Student student = createStudentFromResultSet(resultSet);\r\n                studentOptional = Optional.of(student);\r\n            }\r\n            return studentOptional;\r\n        } catch (SQLException e) {\r\n            throw new DaoException(\"Finding student by email and password error\", e);\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public Optional<Student> findById(long id) throws DaoException {\r\n        try (Connection connection = DbcpDataSource.getConnection()) {\r\n            PreparedStatement statement = connection.prepareStatement(FIND_STUDENT_BY_ID);\r\n            statement.setLong(1, id);\r\n            ResultSet resultSet = statement.executeQuery();\r\n            Optional<Student> studentOptional = Optional.empty();\r\n            if (resultSet.next()) {\r\n                Student student = createStudentFromResultSet(resultSet);\r\n                studentOptional = Optional.of(student);\r\n            }\r\n            return studentOptional;\r\n        } catch (SQLException e) {\r\n            throw new DaoException(\"Finding student by id error\", e);\r\n        }\r\n    }\r\n    @Override\r\n    public Optional<Student> findByName(String name) throws DaoException {\r\n        try (Connection connection = DbcpDataSource.getConnection()) {\r\n            PreparedStatement statement = connection.prepareStatement(FIND_STUDENT_BY_NAME);\r\n            statement.setString(1, name);\r\n            ResultSet resultSet = statement.executeQuery();\r\n            Optional<Student> studentOptional = Optional.empty();\r\n            if (resultSet.next()) {\r\n                Student student = createStudentFromResultSet(resultSet);\r\n                studentOptional = Optional.of(student);\r\n            }\r\n            return studentOptional;\r\n        } catch (SQLException e) {\r\n            throw new DaoException(\"Finding student by name error\", e);\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public Optional<Student> findBySurname(String surname) throws DaoException {\r\n        try (Connection connection = DbcpDataSource.getConnection()) {\r\n            PreparedStatement statement = connection.prepareStatement(FIND_STUDENT_BY_SURNAME);\r\n            statement.setString(1, surname);\r\n            ResultSet resultSet = statement.executeQuery();\r\n            Optional<Student> studentOptional = Optional.empty();\r\n            if (resultSet.next()) {\r\n                Student student = createStudentFromResultSet(resultSet);\r\n                studentOptional = Optional.of(student);\r\n            }\r\n            return studentOptional;\r\n        } catch (SQLException e) {\r\n            throw new DaoException(\"Finding student by surname error\", e);\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public List<Student> findAll() throws DaoException {\r\n        try (Connection connection = DbcpDataSource.getConnection()) {\r\n            PreparedStatement statement = connection.prepareStatement(FIND_ALL);\r\n            ResultSet resultSet = statement.executeQuery();\r\n            List<Student> studentList = new ArrayList<>();\r\n            if (resultSet.next()) {\r\n                Student student = createStudentFromResultSet(resultSet);\r\n                studentList.add(student);\r\n            }\r\n            return studentList;\r\n        } catch (SQLException e) {\r\n            throw new DaoException(\"Finding all students error\", e);\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public boolean add(Student student) throws DaoException {\r\n        try (Connection connection = DbcpDataSource.getConnection();\r\n             PreparedStatement statement = connection.prepareStatement(ADD_STUDENT)) {\r\n            statement.setString(1,student.getName());\r\n            statement.setString(2,student.getSurname());\r\n            return statement.executeUpdate() > 0;\r\n        } catch (SQLException e) {\r\n            throw new DaoException(\"Add student error\", e);\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public boolean update(Student student) throws DaoException {\r\n        try (Connection connection = DbcpDataSource.getConnection();\r\n             PreparedStatement statement = connection.prepareStatement(UPDATE_STUDENT)) {\r\n            statement.setString(1,student.getName());\r\n            statement.setString(2,student.getSurname());\r\n            statement.setLong(3,student.getId());\r\n            return statement.executeUpdate() > 0;\r\n        } catch (SQLException e) {\r\n            throw new DaoException(\"Update student error\", e);\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public boolean delete(long id) throws DaoException {\r\n        try (Connection connection = DbcpDataSource.getConnection();\r\n             PreparedStatement statement = connection.prepareStatement(DELETE_STUDENT)) {\r\n            statement.setLong(1,id);\r\n            return statement.executeUpdate() > 0;\r\n        } catch (SQLException e) {\r\n            throw new DaoException(\"Delete student error\", e);\r\n        }\r\n    }\r\n\r\n    private Student createStudentFromResultSet(ResultSet resultSet) throws SQLException {\r\n        Long id = resultSet.getLong(1);\r\n        String name = resultSet.getString(2);\r\n        String surname = resultSet.getString(3);\r\n        return new Student(id, name, surname);\r\n    }\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/ru/danko/testtask/dao/impl/StudentDaoImpl.java b/src/main/java/ru/danko/testtask/dao/impl/StudentDaoImpl.java
+--- a/src/main/java/ru/danko/testtask/dao/impl/StudentDaoImpl.java	(revision 1b1d04e630c64f32eb145961a004000145ca7f0d)
++++ b/src/main/java/ru/danko/testtask/dao/impl/StudentDaoImpl.java	(date 1633375070060)
+@@ -17,13 +17,13 @@
+             "studentsdatabase.student.name, studentsdatabase.student.surname " +
+             "FROM studentsdatabase.student WHERE name=? AND surname=?";
+     private static final String FIND_STUDENT_BY_ID = "SELECT studentsdatabase.student.id, studentsdatabase.student.name," +
+-            "studentsdatabase.student.surname FROM studentsdatabase.student WHERE id=?";
++            "studentsdatabase.student.surname FROM studentsdatabase.student WHERE id=? ORDER BY surname DESC";
+     private static final String FIND_STUDENT_BY_NAME = "SELECT studentsdatabase.student.id, studentsdatabase.student.name," +
+-            "studentsdatabase.student.surname FROM studentsdatabase.student WHERE name=?";
++            "studentsdatabase.student.surname FROM studentsdatabase.student WHERE name=? ORDER BY surname DESC";
+     private static final String FIND_STUDENT_BY_SURNAME = "SELECT studentsdatabase.student.id, studentsdatabase.student.name," +
+-            "studentsdatabase.student.surname FROM studentsdatabase.student WHERE surname=?";
++            "studentsdatabase.student.surname FROM studentsdatabase.student WHERE surname=? ORDER BY surname DESC";
+     private static final String FIND_ALL = "SELECT studentsdatabase.student.id, studentsdatabase.student.name," +
+-            "studentsdatabase.student.surname FROM studentsdatabase.student";
++            "studentsdatabase.student.surname FROM studentsdatabase.student ORDER BY surname DESC";
+     private static final String ADD_STUDENT = "INSERT INTO studentsdatabase.student (name,surname) values (?,?)";
+     private static final String UPDATE_STUDENT = "UPDATE studentsdatabase.student SET name=?, surname=? WHERE id=?";
+     private static final String DELETE_STUDENT  = "DELETE FROM studentsdatabase.student WHERE id=?";
+Index: src/main/java/ru/danko/testtask/entity/Student.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.danko.testtask.entity;\r\n\r\nimport java.util.Objects;\r\nimport java.util.StringJoiner;\r\n\r\npublic class Student {\r\n\r\n    private long id;\r\n    private String name;\r\n    private String surname;\r\n\r\n    public Student() {\r\n    }\r\n\r\n    public Student(Long id, String name, String surname) {\r\n        this.id = id;\r\n        this.name = name;\r\n        this.surname = surname;\r\n    }\r\n\r\n    public long getId() {\r\n        return id;\r\n    }\r\n\r\n    public void setId(long id) {\r\n        this.id = id;\r\n    }\r\n\r\n    public String getName() {\r\n        return name;\r\n    }\r\n\r\n    public void setName(String name) {\r\n        this.name = name;\r\n    }\r\n\r\n    public String getSurname() {\r\n        return surname;\r\n    }\r\n\r\n    public void setSurname(String surname) {\r\n        this.surname = surname;\r\n    }\r\n\r\n    @Override\r\n    public boolean equals(Object o) {\r\n        if (this == o) {\r\n            return true;\r\n        }\r\n        if (o == null || getClass() != o.getClass()){\r\n            return false;\r\n        }\r\n        Student student = (Student) o;\r\n        if (id != student.id){\r\n            return false;\r\n        }\r\n        if (name != null ? !name.equals(student.name) : student.name != null){\r\n            return false;\r\n        }\r\n        return surname != null ? surname.equals(student.surname) : student.surname == null;\r\n    }\r\n\r\n    @Override\r\n    public int hashCode() {\r\n        int result = (int) (id ^ (id >>> 32));\r\n        result = 31 * result + (name != null ? name.hashCode() : 0);\r\n        result = 31 * result + (surname != null ? surname.hashCode() : 0);\r\n        return result;\r\n    }\r\n\r\n    @Override\r\n    public String toString() {\r\n        return new StringJoiner(\", \", Student.class.getSimpleName() + \"[\", \"]\")\r\n                .add(\"id=\" + id)\r\n                .add(\"name=\" + name + \"'\")\r\n                .add(\"surname=\" + surname + \"'\")\r\n                .toString();\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/ru/danko/testtask/entity/Student.java b/src/main/java/ru/danko/testtask/entity/Student.java
+--- a/src/main/java/ru/danko/testtask/entity/Student.java	(revision 1b1d04e630c64f32eb145961a004000145ca7f0d)
++++ b/src/main/java/ru/danko/testtask/entity/Student.java	(date 1633374831405)
+@@ -1,6 +1,5 @@
+ package ru.danko.testtask.entity;
+ 
+-import java.util.Objects;
+ import java.util.StringJoiner;
+ 
+ public class Student {
+Index: src/main/java/ru/danko/testtask/validator/RequestParametr.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/ru/danko/testtask/validator/RequestParametr.java b/src/main/java/ru/danko/testtask/validator/RequestParametr.java
+new file mode 100644
+--- /dev/null	(date 1633374892618)
++++ b/src/main/java/ru/danko/testtask/validator/RequestParametr.java	(date 1633374892618)
+@@ -0,0 +1,8 @@
++package ru.danko.testtask.validator;
++
++public class RequestParametr {
++    public static final String NAME = "name";
++
++    private RequestParameter() {
++    }
++}
+Index: src/main/java/ru/danko/testtask/validator/UserValidator.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/ru/danko/testtask/validator/UserValidator.java b/src/main/java/ru/danko/testtask/validator/UserValidator.java
+new file mode 100644
+--- /dev/null	(date 1633374534655)
++++ b/src/main/java/ru/danko/testtask/validator/UserValidator.java	(date 1633374534655)
+@@ -0,0 +1,58 @@
++package ru.danko.testtask.validator;
++
++import java.util.Map;
++
++public class UserValidator {
++    private static final String ID_REGEX = "^[1-9]\\d{0,9}$";
++    private static final String NAME_REGEX = "^\\p{L}{2,25}$";
++    private static final String SURNAME_REGEX = "^\\p{L}{2,25}$";
++    private static final String EMPTY_VALUE = "";
++
++    public static boolean isRegistrationParametersCorrect(Map<String, String> parameters) {
++        boolean isCorrect = true;
++        if (!isEmailValid(parameters.get(RequestParameter.EMAIL))) {
++            isCorrect = false;
++            parameters.put(RequestParameter.EMAIL, EMPTY_VALUE);
++        }
++        if (!isNameValid(parameters.get(RequestParameter.NAME))) {
++            isCorrect = false;
++            parameters.put(RequestParameter.NAME, EMPTY_VALUE);
++        }
++        if (!isNameValid(parameters.get(RequestParameter.SURNAME))) {
++            isCorrect = false;
++            parameters.put(RequestParameter.SURNAME, EMPTY_VALUE);
++        }
++        if (!isNameValid(parameters.get(RequestParameter.PATRONYMIC))) {
++            isCorrect = false;
++            parameters.put(RequestParameter.PATRONYMIC, EMPTY_VALUE);
++        }
++        if (!isPasswordValid(parameters.get(RequestParameter.PASSWORD)) ||
++                !(parameters.get(RequestParameter.PASSWORD)
++                        .equals(parameters.get(RequestParameter.PASSWORD_REPEAT)))) {
++            isCorrect = false;
++            parameters.put(RequestParameter.PASSWORD, EMPTY_VALUE);
++            parameters.put(RequestParameter.PASSWORD_REPEAT, EMPTY_VALUE);
++        }
++        return isCorrect;
++    }
++
++    public static boolean isIdValid(String id) {
++        return isStringCorrect(id, ID_REGEX);
++    }
++
++    public static boolean isNameValid(String name) {
++        return isStringCorrect(name, NAME_REGEX) && !name.isBlank();
++    }
++
++    public static boolean isSurnameValid(String surname) {
++        return isStringCorrect(surname, SURNAME_REGEX) && !surname.isBlank();
++    }
++
++    private static boolean isStringCorrect(String line, String regex) {
++        boolean result = false;
++        if (line != null) {
++            result = line.matches(regex);
++        }
++        return result;
++    }
++}

@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" external-system-id="Maven" name="testtask:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>testtask</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="databasetest.war">
+      <element id="artifact" artifact-name="testtask:war exploded" />
+    </root>
+  </artifact>
+</component>

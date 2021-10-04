@@ -17,13 +17,13 @@ public class StudentDaoImpl implements StudentDao {
             "studentsdatabase.student.name, studentsdatabase.student.surname " +
             "FROM studentsdatabase.student WHERE name=? AND surname=?";
     private static final String FIND_STUDENT_BY_ID = "SELECT studentsdatabase.student.id, studentsdatabase.student.name," +
-            "studentsdatabase.student.surname FROM studentsdatabase.student WHERE id=?";
+            "studentsdatabase.student.surname FROM studentsdatabase.student WHERE id=? ORDER BY surname DESC";
     private static final String FIND_STUDENT_BY_NAME = "SELECT studentsdatabase.student.id, studentsdatabase.student.name," +
-            "studentsdatabase.student.surname FROM studentsdatabase.student WHERE name=?";
+            "studentsdatabase.student.surname FROM studentsdatabase.student WHERE name=? ORDER BY surname DESC";
     private static final String FIND_STUDENT_BY_SURNAME = "SELECT studentsdatabase.student.id, studentsdatabase.student.name," +
-            "studentsdatabase.student.surname FROM studentsdatabase.student WHERE surname=?";
+            "studentsdatabase.student.surname FROM studentsdatabase.student WHERE surname=? ORDER BY surname DESC";
     private static final String FIND_ALL = "SELECT studentsdatabase.student.id, studentsdatabase.student.name," +
-            "studentsdatabase.student.surname FROM studentsdatabase.student";
+            "studentsdatabase.student.surname FROM studentsdatabase.student ORDER BY surname DESC";
     private static final String ADD_STUDENT = "INSERT INTO studentsdatabase.student (name,surname) values (?,?)";
     private static final String UPDATE_STUDENT = "UPDATE studentsdatabase.student SET name=?, surname=? WHERE id=?";
     private static final String DELETE_STUDENT  = "DELETE FROM studentsdatabase.student WHERE id=?";

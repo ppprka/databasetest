@@ -49,7 +49,7 @@ public class StudentDaoImpl implements StudentDao {
             }
             return studentOptional;
         } catch (SQLException e) {
-            throw new DaoException("Finding user by email and password error", e);
+            throw new DaoException("Finding student by email and password error", e);
         }
     }
 
@@ -66,7 +66,7 @@ public class StudentDaoImpl implements StudentDao {
             }
             return studentOptional;
         } catch (SQLException e) {
-            throw new DaoException("Finding user by email and password error", e);
+            throw new DaoException("Finding student by id error", e);
         }
     }
     @Override
@@ -82,7 +82,7 @@ public class StudentDaoImpl implements StudentDao {
             }
             return studentOptional;
         } catch (SQLException e) {
-            throw new DaoException("Finding user by email and password error", e);
+            throw new DaoException("Finding student by name error", e);
         }
     }
 
@@ -99,7 +99,7 @@ public class StudentDaoImpl implements StudentDao {
             }
             return studentOptional;
         } catch (SQLException e) {
-            throw new DaoException("Finding user by email and password error", e);
+            throw new DaoException("Finding student by surname error", e);
         }
     }
 
@@ -115,7 +115,7 @@ public class StudentDaoImpl implements StudentDao {
             }
             return studentList;
         } catch (SQLException e) {
-            throw new DaoException("Finding user by email and password error", e);
+            throw new DaoException("Finding all students error", e);
         }
     }
 
@@ -127,7 +127,7 @@ public class StudentDaoImpl implements StudentDao {
             statement.setString(2,student.getSurname());
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new DaoException("Finding user by email and password error", e);
+            throw new DaoException("Add student error", e);
         }
     }
 
@@ -140,7 +140,7 @@ public class StudentDaoImpl implements StudentDao {
             statement.setLong(3,student.getId());
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new DaoException("Finding user by email and password error", e);
+            throw new DaoException("Update student error", e);
         }
     }
 
@@ -151,7 +151,7 @@ public class StudentDaoImpl implements StudentDao {
             statement.setLong(1,id);
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new DaoException("Finding user by email and password error", e);
+            throw new DaoException("Delete student error", e);
         }
     }
 

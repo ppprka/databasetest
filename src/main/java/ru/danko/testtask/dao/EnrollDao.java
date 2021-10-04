@@ -1,19 +1,16 @@
 package ru.danko.testtask.dao;
 
 import ru.danko.testtask.entity.Enroll;
+import ru.danko.testtask.exception.DaoException;
 
 import java.util.Optional;
 
 public interface EnrollDao {
 
-    Optional<Enroll> findGroupByStudent(long idStudent);
+    Optional<Enroll> findGroupByStudentId(long idStudent) throws DaoException;
 
-    Optional<Enroll> findStudentByGroup(long idGroup);
+    boolean add(Enroll enroll) throws DaoException;
 
-    boolean add(Enroll enroll);
-
-    boolean update(Enroll enroll);
-
-    boolean delete(long id);
+    boolean delete(long id) throws DaoException;
 
 }

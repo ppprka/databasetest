@@ -7,7 +7,7 @@ public interface RecordBookDao {
 
     Optional<RecordBook> findById(long id);
 
-    Optional<RecordBook> findByGraduationYear(String graduation_year);
+    Optional<RecordBook> findByGraduationYear(String graduationYear);
 
     Optional<RecordBook> findByGroupId(String id);
 

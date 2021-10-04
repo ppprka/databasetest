@@ -1,8 +1,9 @@
 package ru.danko.testtask.dao.impl;
 
 import ru.danko.testtask.dao.StudentDao;
-import ru.danko.testtask.dao.connection.DBCPDataSource;
+import ru.danko.testtask.dao.connection.DbcpDataSource;
 import ru.danko.testtask.entity.Student;
+import ru.danko.testtask.exception.DaoException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -35,8 +36,8 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public Optional<Student> findByNameAndSurname(String name, String surname) throws SQLException {
-        try (Connection connection = DBCPDataSource.getConnection()) {
+    public Optional<Student> findByNameAndSurname(String name, String surname) throws DaoException {
+        try (Connection connection = DbcpDataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(FIND_STUDENT_BY_NAME_AND_SURNAME);
             statement.setString(1, name);
             statement.setString(2, surname);
@@ -48,13 +49,13 @@ public class StudentDaoImpl implements StudentDao {
             }
             return studentOptional;
         } catch (SQLException e) {
-            throw new SQLException("Finding user by email and password error", e);
+            throw new DaoException("Finding user by email and password error", e);
         }
     }
 
     @Override
-    public Optional<Student> findById(long id) throws SQLException {
-        try (Connection connection = DBCPDataSource.getConnection()) {
+    public Optional<Student> findById(long id) throws DaoException {
+        try (Connection connection = DbcpDataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(FIND_STUDENT_BY_ID);
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -65,12 +66,12 @@ public class StudentDaoImpl implements StudentDao {
             }
             return studentOptional;
         } catch (SQLException e) {
-            throw new SQLException("Finding user by email and password error", e);
+            throw new DaoException("Finding user by email and password error", e);
         }
     }
     @Override
-    public Optional<Student> findByName(String name) throws SQLException {
-        try (Connection connection = DBCPDataSource.getConnection()) {
+    public Optional<Student> findByName(String name) throws DaoException {
+        try (Connection connection = DbcpDataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(FIND_STUDENT_BY_NAME);
             statement.setString(1, name);
             ResultSet resultSet = statement.executeQuery();
@@ -81,13 +82,13 @@ public class StudentDaoImpl implements StudentDao {
             }
             return studentOptional;
         } catch (SQLException e) {
-            throw new SQLException("Finding user by email and password error", e);
+            throw new DaoException("Finding user by email and password error", e);
         }
     }
 
     @Override
-    public Optional<Student> findBySurname(String surname) throws SQLException {
-        try (Connection connection = DBCPDataSource.getConnection()) {
+    public Optional<Student> findBySurname(String surname) throws DaoException {
+        try (Connection connection = DbcpDataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(FIND_STUDENT_BY_SURNAME);
             statement.setString(1, surname);
             ResultSet resultSet = statement.executeQuery();
@@ -98,13 +99,13 @@ public class StudentDaoImpl implements StudentDao {
             }
             return studentOptional;
         } catch (SQLException e) {
-            throw new SQLException("Finding user by email and password error", e);
+            throw new DaoException("Finding user by email and password error", e);
         }
     }
 
     @Override
-    public List<Student> findAll() throws SQLException {
-        try (Connection connection = DBCPDataSource.getConnection()) {
+    public List<Student> findAll() throws DaoException {
+        try (Connection connection = DbcpDataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(FIND_ALL);
             ResultSet resultSet = statement.executeQuery();
             List<Student> studentList = new ArrayList<>();
@@ -114,47 +115,47 @@ public class StudentDaoImpl implements StudentDao {
             }
             return studentList;
         } catch (SQLException e) {
-            throw new SQLException("Finding user by email and password error", e);
+            throw new DaoException("Finding user by email and password error", e);
         }
     }
 
     @Override
-    public boolean add(Student student) throws SQLException {
-        try (Connection connection = DBCPDataSource.getConnection();
+    public boolean add(Student student) throws DaoException {
+        try (Connection connection = DbcpDataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(ADD_STUDENT)) {
             statement.setString(1,student.getName());
             statement.setString(2,student.getSurname());
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new SQLException("Finding user by email and password error", e);
+            throw new DaoException("Finding user by email and password error", e);
         }
     }
 
     @Override
-    public boolean update(Student student) throws SQLException {
-        try (Connection connection = DBCPDataSource.getConnection();
+    public boolean update(Student student) throws DaoException {
+        try (Connection connection = DbcpDataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_STUDENT)) {
             statement.setString(1,student.getName());
             statement.setString(2,student.getSurname());
             statement.setLong(3,student.getId());
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new SQLException("Finding user by email and password error", e);
+            throw new DaoException("Finding user by email and password error", e);
         }
     }
 
     @Override
-    public boolean delete(long id) throws SQLException {
-        try (Connection connection = DBCPDataSource.getConnection();
+    public boolean delete(long id) throws DaoException {
+        try (Connection connection = DbcpDataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_STUDENT)) {
             statement.setLong(1,id);
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new SQLException("Finding user by email and password error", e);
+            throw new DaoException("Finding user by email and password error", e);
         }
     }
 
-    public Student createStudentFromResultSet(ResultSet resultSet) throws SQLException {
+    private Student createStudentFromResultSet(ResultSet resultSet) throws SQLException {
         Long id = resultSet.getLong(1);
         String name = resultSet.getString(2);
         String surname = resultSet.getString(3);

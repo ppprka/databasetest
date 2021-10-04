@@ -6,9 +6,9 @@ import java.util.Optional;
 
 public interface EnrollDao {
 
-    Optional<Enroll> findGroupByStudent(long id_Student);
+    Optional<Enroll> findGroupByStudent(long idStudent);
 
-    Optional<Enroll> findStudentByGroup(long id_Group);
+    Optional<Enroll> findStudentByGroup(long idGroup);
 
     boolean add(Enroll enroll);
 

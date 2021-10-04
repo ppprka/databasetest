@@ -1,21 +1,24 @@
 package ru.danko.testtask.dao;
 
 import ru.danko.testtask.entity.RecordBook;
+import ru.danko.testtask.exception.DaoException;
+
+import java.util.List;
 import java.util.Optional;
 
 public interface RecordBookDao {
 
-    Optional<RecordBook> findById(long id);
+    Optional<RecordBook> findById(long id) throws DaoException;
 
-    Optional<RecordBook> findByGraduationYear(String graduationYear);
+    Optional<RecordBook> findByGraduationYear(String graduationYear) throws DaoException;
 
-    Optional<RecordBook> findByGroupId(String id);
+    Optional<RecordBook> findByGroupId(String groupId) throws DaoException;
 
-    Optional<RecordBook> findAll();
+    List<RecordBook> findAll() throws DaoException;
 
-    boolean add(RecordBook recordBook);
+    boolean add(RecordBook recordBook) throws DaoException;
 
-    boolean update(RecordBook recordBook);
+    boolean update(RecordBook recordBook) throws DaoException;
 
-    boolean delete(long id);
+    boolean delete(long id) throws DaoException;
 }

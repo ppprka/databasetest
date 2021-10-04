@@ -30,6 +30,13 @@ public class RecordBookDaoImpl implements RecordBookDao {
     private static final String ADD_RECORD_BOOK = "INSERT INTO studentsdatabase.record_book (id,graduation_year,group_id) values (?,?,?)";
     private static final String UPDATE_RECORD_BOOK= "UPDATE studentsdatabase.record_book SET graduation_year=?, group_id=? WHERE id=?";
     private static final String DELETE_RECORD_BOOK  = "DELETE FROM studentsdatabase.record_book WHERE id=?";
+    private static final String FIND_BY_SAME_GRADUATION_YEAR = "SELECT studentsdatabase.student.id,studentsdatabase.student.name, " +
+            "studentsdatabase.student.surname " +
+            "FROM studentsdatabase.record_book JOIN studentsdatabase.student s on s.id = record_book.id " +
+            "WHERE studentsdatabase.record_book.graduation_year>?";
+    private static final String FIND_BY_COUNT_STUDENTS_IN_GROUP = "SELECT studentsdatabase.student_group.id," +
+            "studentsdatabase.student_group.number FROM studentsdatabase.student_group JOIN studentsdatabase.record_book rb on " +
+            "student_group.id = rb.group_id HAVING COUNT(studentsdatabase.record_book.group_id)>?";
 
     private RecordBookDaoImpl() {}
 
@@ -138,6 +145,39 @@ public class RecordBookDaoImpl implements RecordBookDao {
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DaoException("Delete record book error", e);
+        }
+    }
+
+    public void findBySameGraduationYear(String graduationYear) throws DaoException {
+        try (Connection connection = DbcpDataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(FIND_BY_SAME_GRADUATION_YEAR);
+            statement.setString(1, graduationYear);
+            ResultSet resultSet = statement.executeQuery();
+            int count = 0;
+            while (resultSet.next()){
+                Long id = resultSet.getLong(1);
+                String name = resultSet.getString(2);
+                String surname = resultSet.getString(3);
+                System.out.println("Id - "+id+", Name - "+name+", Surname - "+surname);
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Finding record book by id error", e);
+        }
+    }
+
+    public void findByCountStudentsInGroup(String num) throws DaoException {
+        try (Connection connection = DbcpDataSource.getConnection()) {
+            PreparedStatement statement = connection.prepareStatement(FIND_BY_COUNT_STUDENTS_IN_GROUP);
+            statement.setString(1, num);
+            ResultSet resultSet = statement.executeQuery();
+            int count = 0;
+            while (resultSet.next()){
+                Long id = resultSet.getLong(1);
+                String number = resultSet.getString(2);
+                System.out.println("Id - "+id+", Number - "+number);
+            }
+        } catch (SQLException e) {
+            throw new DaoException("Finding record book by id error", e);
         }
     }
 

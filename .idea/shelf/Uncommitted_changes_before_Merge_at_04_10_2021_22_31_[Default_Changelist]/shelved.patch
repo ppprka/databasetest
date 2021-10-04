@@ -1,0 +1,17 @@
+Index: src/main/java/ru/danko/testtask/entity/Student.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.danko.testtask.entity;\r\n\r\nimport java.util.Objects;\r\nimport java.util.StringJoiner;\r\n\r\npublic class Student {\r\n\r\n    private long id;\r\n    private String name;\r\n    private String surname;\r\n\r\n    public Student() {\r\n    }\r\n\r\n    public Student(Long id, String name, String surname) {\r\n        this.id = id;\r\n        this.name = name;\r\n        this.surname = surname;\r\n    }\r\n\r\n    public long getId() {\r\n        return id;\r\n    }\r\n\r\n    public void setId(long id) {\r\n        this.id = id;\r\n    }\r\n\r\n    public String getName() {\r\n        return name;\r\n    }\r\n\r\n    public void setName(String name) {\r\n        this.name = name;\r\n    }\r\n\r\n    public String getSurname() {\r\n        return surname;\r\n    }\r\n\r\n    public void setSurname(String surname) {\r\n        this.surname = surname;\r\n    }\r\n\r\n    @Override\r\n    public boolean equals(Object o) {\r\n        if (this == o) {\r\n            return true;\r\n        }\r\n        if (o == null || getClass() != o.getClass()){\r\n            return false;\r\n        }\r\n        Student student = (Student) o;\r\n        if (id != student.id){\r\n            return false;\r\n        }\r\n        if (name != null ? !name.equals(student.name) : student.name != null){\r\n            return false;\r\n        }\r\n        return surname != null ? surname.equals(student.surname) : student.surname == null;\r\n    }\r\n\r\n    @Override\r\n    public int hashCode() {\r\n        int result = (int) (id ^ (id >>> 32));\r\n        result = 31 * result + (name != null ? name.hashCode() : 0);\r\n        result = 31 * result + (surname != null ? surname.hashCode() : 0);\r\n        return result;\r\n    }\r\n\r\n    @Override\r\n    public String toString() {\r\n        return new StringJoiner(\", \", Student.class.getSimpleName() + \"[\", \"]\")\r\n                .add(\"id=\" + id)\r\n                .add(\"name=\" + name + \"'\")\r\n                .add(\"surname=\" + surname + \"'\")\r\n                .toString();\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/ru/danko/testtask/entity/Student.java b/src/main/java/ru/danko/testtask/entity/Student.java
+--- a/src/main/java/ru/danko/testtask/entity/Student.java	(revision 8c498e3789bb2e919ff2e8da54ae294685b4f985)
++++ b/src/main/java/ru/danko/testtask/entity/Student.java	(date 1633375801827)
+@@ -1,6 +1,5 @@
+ package ru.danko.testtask.entity;
+ 
+-import java.util.Objects;
+ import java.util.StringJoiner;
+ 
+ public class Student {

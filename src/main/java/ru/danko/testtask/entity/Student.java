@@ -1,6 +1,5 @@
 package ru.danko.testtask.entity;
 
-import java.util.Objects;
 import java.util.StringJoiner;
 
 public class Student {

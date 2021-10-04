@@ -43,15 +43,6 @@ public class Student {
     }
 
     @Override
-    public String toString() {
-        return new StringJoiner(", ", Student.class.getSimpleName() + "[", "]")
-                .add("id=" + id)
-                .add("name=" + name + "'")
-                .add("surname=" + surname + "'")
-                .toString();
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -75,5 +66,14 @@ public class Student {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (surname != null ? surname.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Student.class.getSimpleName() + "[", "]")
+                .add("id=" + id)
+                .add("name=" + name + "'")
+                .add("surname=" + surname + "'")
+                .toString();
     }
 }

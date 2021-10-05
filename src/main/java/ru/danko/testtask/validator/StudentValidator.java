@@ -9,7 +9,7 @@ public class StudentValidator {
     private static final String GRADUATION_REGEX = "^[1-2]\\d{0,9}$";
     private static final String EMPTY_VALUE = "";
 
-    public static boolean isRegistrationParametersCorrect(Map<String, String> parameters) {
+    public boolean isRegistrationParametersCorrect(Map<String, String> parameters) {
         boolean isCorrect = true;
         if (!isIdValid(parameters.get(RequestParameter.ID))) {
             isCorrect = false;
@@ -43,12 +43,6 @@ public class StudentValidator {
             isCorrect = false;
             parameters.put(RequestParameter.GRADUATION, EMPTY_VALUE);
         }
-        if (!isNewStudentParametersValid(parameters.get(RequestParameter.ID),parameters.get(RequestParameter.NAME),parameters.get(RequestParameter.SURNAME))) {
-            isCorrect = false;
-            parameters.put(RequestParameter.ID, EMPTY_VALUE);
-            parameters.put(RequestParameter.NAME,EMPTY_VALUE);
-            parameters.put(RequestParameter.SURNAME,EMPTY_VALUE);
-        }
         return isCorrect;
     }
 
@@ -56,7 +50,7 @@ public class StudentValidator {
         return isStringCorrect(id, ID_REGEX);
     }
 
-    public static boolean isNameValid(String name) {
+    public boolean isNameValid(String name) {
         return isStringCorrect(name, NAME_REGEX) && !name.isBlank();
     }
 
@@ -66,10 +60,6 @@ public class StudentValidator {
 
     public static boolean isGraduationValid(String graduationYear) {
         return isStringCorrect(graduationYear, GRADUATION_REGEX) && !graduationYear.isBlank();
-    }
-
-    public static boolean isNewStudentParametersValid(String id,String name,String surname) {
-        return isStringCorrect(id, ID_REGEX) && isStringCorrect(name, NAME_REGEX) && !name.isBlank() && isStringCorrect(surname, NAME_REGEX) && !surname.isBlank();
     }
 
     private static boolean isStringCorrect(String line, String regex) {

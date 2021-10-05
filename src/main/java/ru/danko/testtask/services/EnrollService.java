@@ -1,15 +1,13 @@
 package ru.danko.testtask.services;
 
 import ru.danko.testtask.entity.Enroll;
-import ru.danko.testtask.exception.DaoException;
+import ru.danko.testtask.exception.DaoServiceException;
 
+import java.util.Map;
 import java.util.Optional;
 
 public interface EnrollService {
 
-    Optional<Enroll> findGroupByStudentId(long idStudent) throws DaoException;
+    Optional<Enroll> findGroupByStudentId(String idStudent) throws DaoServiceException;
 
-    boolean add(Enroll enroll) throws DaoException;
-
-    boolean delete(long id) throws DaoException;
 }

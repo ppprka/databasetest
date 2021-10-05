@@ -40,7 +40,7 @@ public class EnrollDaoImpl implements EnrollDao {
             }
             return enrollOptional;
         } catch (SQLException e) {
-            throw new DaoServiceException("Finding student group by id error", e);
+            throw new DaoServiceException("Finding enroll by id error", e);
         }
     }
 
@@ -51,7 +51,7 @@ public class EnrollDaoImpl implements EnrollDao {
             statement.setLong(1,enroll.getId());
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new DaoServiceException("Add student group error", e);
+            throw new DaoServiceException("Add enroll error", e);
         }
     }
 
@@ -62,14 +62,14 @@ public class EnrollDaoImpl implements EnrollDao {
             statement.setLong(1,id);
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new DaoServiceException("Delete student group error", e);
+            throw new DaoServiceException("Delete enroll error", e);
         }
     }
 
     private Enroll createEnrollFromResultSet(ResultSet resultSet) throws SQLException {
-        Long id = resultSet.getLong(1);
-        Long idStudent = resultSet.getLong(2);
-        Long idGroup = resultSet.getLong(3);
+        long id = resultSet.getLong(1);
+        long idStudent = resultSet.getLong(2);
+        long idGroup = resultSet.getLong(3);
         Student student = new Student();
         student.setId(idStudent);
         StudentGroup studentGroup = new StudentGroup();

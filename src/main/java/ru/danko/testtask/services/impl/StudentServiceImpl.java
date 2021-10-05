@@ -23,10 +23,10 @@ public class StudentServiceImpl implements StudentService {
     public Optional<Student> findByNameAndSurname(String name, String surname) throws DaoServiceException {
         Optional<Student> optionalStudent;
         try {
-            optionalStudent = studentDao.findByNameAndSurname(name,surname);
+            optionalStudent = studentDao.findByNameAndSurname(name, surname);
             logger.log(Level.INFO, "Finded by name and surname");
         } catch (DaoServiceException e) {
-            logger.log(Level.FATAL, "Error while getting student by name and surname");
+            logger.log(Level.ERROR, "Error while getting student by name and surname");
             throw new DaoServiceException("Error while getting student by name and surname", e);
         }
         return optionalStudent;
@@ -37,13 +37,13 @@ public class StudentServiceImpl implements StudentService {
         Optional<Student> optionalStudent = Optional.empty();
         try {
             if (StudentValidator.isIdValid(id)) {
-                long userId = Long.parseLong(id);
-                optionalStudent = studentDao.findById(userId);
+                long studentId = Long.parseLong(id);
+                optionalStudent = studentDao.findById(studentId);
             }
             logger.log(Level.INFO, "Finded by id");
         } catch (DaoServiceException e) {
-            logger.log(Level.FATAL, "Error while finding student by id");
-            throw new DaoServiceException("Error while finding user by id", e);
+            logger.log(Level.ERROR, "Error while finding student by id");
+            throw new DaoServiceException("Error while finding student by id", e);
         }
         return optionalStudent;
     }
@@ -51,14 +51,15 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Optional<Student> findByName(String name) throws DaoServiceException {
         Optional<Student> optionalStudent = Optional.empty();
+        StudentValidator studentValidator = new StudentValidator();
         try {
-            if (StudentValidator.isNameValid(name)) {
+            if (studentValidator.isNameValid(name)) {
                 optionalStudent = studentDao.findByName(name);
             }
             logger.log(Level.INFO, "Finded by name");
         } catch (DaoServiceException e) {
-            logger.log(Level.FATAL, "Error while getting student by name");
-            throw new DaoServiceException("Error while finding user by name", e);
+            logger.log(Level.ERROR, "Error while getting student by name");
+            throw new DaoServiceException("Error while finding student by name", e);
         }
         return optionalStudent;
     }
@@ -66,14 +67,15 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Optional<Student> findBySurname(String surname) throws DaoServiceException {
         Optional<Student> optionalStudent = Optional.empty();
+        StudentValidator studentValidator = new StudentValidator();
         try {
-            if (StudentValidator.isNameValid(surname)) {
+            if (studentValidator.isNameValid(surname)) {
                 optionalStudent = studentDao.findBySurname(surname);
             }
             logger.log(Level.INFO, "Finded by surname");
         } catch (DaoServiceException e) {
-            logger.log(Level.FATAL, "Error while getting student by surname");
-            throw new DaoServiceException("Error while finding user by surname", e);
+            logger.log(Level.ERROR, "Error while getting student by surname");
+            throw new DaoServiceException("Error while finding student by surname", e);
         }
         return optionalStudent;
     }
@@ -84,30 +86,29 @@ public class StudentServiceImpl implements StudentService {
             List<Student> list = studentDao.findAll();
             logger.log(Level.INFO, "Finded all");
             return list;
-        }
-        catch (DaoServiceException e) {
-            logger.log(Level.FATAL, "Error while getting all students");
+        } catch (DaoServiceException e) {
+            logger.log(Level.ERROR, "Error while getting all students");
             throw new DaoServiceException("Error while finding all students", e);
         }
     }
 
     @Override
-    public boolean addStudent(Map<String,String> parameters) throws DaoServiceException {
+    public boolean addStudent(Map<String, String> parameters) throws DaoServiceException {
         boolean result = false;
         String id = parameters.get(RequestParameter.ID);
         String name = parameters.get(RequestParameter.NAME);
         String surname = parameters.get(RequestParameter.SURNAME);
-        if(StudentValidator.isRegistrationParametersCorrect(parameters)){
-            try{
+        StudentValidator studentValidator = new StudentValidator();
+        if (studentValidator.isRegistrationParametersCorrect(parameters)) {
+            try {
                 Student student = new Student();
                 student.setId(Long.parseLong(id));
                 student.setName(name);
                 student.setSurname(surname);
                 result = studentDao.add(student);
                 logger.log(Level.INFO, "Added");
-            }
-            catch (DaoServiceException e){
-                logger.log(Level.FATAL, "Error while adding student");
+            } catch (DaoServiceException e) {
+                logger.log(Level.ERROR, "Error while adding student");
                 throw new DaoServiceException("Error while adding student", e);
             }
         }
@@ -117,14 +118,13 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public boolean updateStudent(String id) throws DaoServiceException {
         boolean result = false;
-        if(studentDao.findById(Long.parseLong(id)).isPresent()&&StudentValidator.isIdValid(id)){
-            try{
+        if (studentDao.findById(Long.parseLong(id)).isPresent() && StudentValidator.isIdValid(id)) {
+            try {
                 Student student = studentDao.findById(Long.parseLong(id)).get();
                 result = studentDao.update(student);
                 logger.log(Level.INFO, "Updated");
-            }
-            catch (DaoServiceException e){
-                logger.log(Level.FATAL, "Error while updating student");
+            } catch (DaoServiceException e) {
+                logger.log(Level.ERROR, "Error while updating student");
                 throw new DaoServiceException("Error while updating student", e);
             }
         }
@@ -134,13 +134,12 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public boolean deleteStudent(String id) throws DaoServiceException {
         boolean result = false;
-        if(studentDao.findById(Long.parseLong(id)).isPresent()&&StudentValidator.isIdValid(id)){
-            try{
+        if (studentDao.findById(Long.parseLong(id)).isPresent() && StudentValidator.isIdValid(id)) {
+            try {
                 result = studentDao.delete(Long.parseLong(id));
                 logger.log(Level.INFO, "Deleted");
-            }
-            catch (DaoServiceException e){
-                logger.log(Level.FATAL, "Error while deleting student");
+            } catch (DaoServiceException e) {
+                logger.log(Level.ERROR, "Error while deleting student");
                 throw new DaoServiceException("Error while deleting student", e);
             }
         }

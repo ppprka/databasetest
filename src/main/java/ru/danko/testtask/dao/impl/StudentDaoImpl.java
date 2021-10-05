@@ -3,7 +3,7 @@ package ru.danko.testtask.dao.impl;
 import ru.danko.testtask.dao.StudentDao;
 import ru.danko.testtask.dao.connection.DbcpDataSource;
 import ru.danko.testtask.entity.Student;
-import ru.danko.testtask.exception.DaoException;
+import ru.danko.testtask.exception.DaoServiceException;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public Optional<Student> findByNameAndSurname(String name, String surname) throws DaoException {
+    public Optional<Student> findByNameAndSurname(String name, String surname) throws DaoServiceException {
         try (Connection connection = DbcpDataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(FIND_STUDENT_BY_NAME_AND_SURNAME);
             statement.setString(1, name);
@@ -49,12 +49,12 @@ public class StudentDaoImpl implements StudentDao {
             }
             return studentOptional;
         } catch (SQLException e) {
-            throw new DaoException("Finding student by email and password error", e);
+            throw new DaoServiceException("Finding student by email and password error", e);
         }
     }
 
     @Override
-    public Optional<Student> findById(long id) throws DaoException {
+    public Optional<Student> findById(long id) throws DaoServiceException {
         try (Connection connection = DbcpDataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(FIND_STUDENT_BY_ID);
             statement.setLong(1, id);
@@ -66,11 +66,11 @@ public class StudentDaoImpl implements StudentDao {
             }
             return studentOptional;
         } catch (SQLException e) {
-            throw new DaoException("Finding student by id error", e);
+            throw new DaoServiceException("Finding student by id error", e);
         }
     }
     @Override
-    public Optional<Student> findByName(String name) throws DaoException {
+    public Optional<Student> findByName(String name) throws DaoServiceException {
         try (Connection connection = DbcpDataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(FIND_STUDENT_BY_NAME);
             statement.setString(1, name);
@@ -82,12 +82,12 @@ public class StudentDaoImpl implements StudentDao {
             }
             return studentOptional;
         } catch (SQLException e) {
-            throw new DaoException("Finding student by name error", e);
+            throw new DaoServiceException("Finding student by name error", e);
         }
     }
 
     @Override
-    public Optional<Student> findBySurname(String surname) throws DaoException {
+    public Optional<Student> findBySurname(String surname) throws DaoServiceException {
         try (Connection connection = DbcpDataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(FIND_STUDENT_BY_SURNAME);
             statement.setString(1, surname);
@@ -99,12 +99,12 @@ public class StudentDaoImpl implements StudentDao {
             }
             return studentOptional;
         } catch (SQLException e) {
-            throw new DaoException("Finding student by surname error", e);
+            throw new DaoServiceException("Finding student by surname error", e);
         }
     }
 
     @Override
-    public List<Student> findAll() throws DaoException {
+    public List<Student> findAll() throws DaoServiceException {
         try (Connection connection = DbcpDataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(FIND_ALL);
             ResultSet resultSet = statement.executeQuery();
@@ -115,24 +115,24 @@ public class StudentDaoImpl implements StudentDao {
             }
             return studentList;
         } catch (SQLException e) {
-            throw new DaoException("Finding all students error", e);
+            throw new DaoServiceException("Finding all students error", e);
         }
     }
 
     @Override
-    public boolean add(Student student) throws DaoException {
+    public boolean add(Student student) throws DaoServiceException {
         try (Connection connection = DbcpDataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(ADD_STUDENT)) {
             statement.setString(1,student.getName());
             statement.setString(2,student.getSurname());
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new DaoException("Add student error", e);
+            throw new DaoServiceException("Add student error", e);
         }
     }
 
     @Override
-    public boolean update(Student student) throws DaoException {
+    public boolean update(Student student) throws DaoServiceException {
         try (Connection connection = DbcpDataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_STUDENT)) {
             statement.setString(1,student.getName());
@@ -140,18 +140,18 @@ public class StudentDaoImpl implements StudentDao {
             statement.setLong(3,student.getId());
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new DaoException("Update student error", e);
+            throw new DaoServiceException("Update student error", e);
         }
     }
 
     @Override
-    public boolean delete(long id) throws DaoException {
+    public boolean delete(long id) throws DaoServiceException {
         try (Connection connection = DbcpDataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_STUDENT)) {
             statement.setLong(1,id);
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new DaoException("Delete student error", e);
+            throw new DaoServiceException("Delete student error", e);
         }
     }
 

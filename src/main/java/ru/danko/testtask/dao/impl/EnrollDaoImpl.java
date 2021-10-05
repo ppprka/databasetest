@@ -5,7 +5,7 @@ import ru.danko.testtask.dao.connection.DbcpDataSource;
 import ru.danko.testtask.entity.Enroll;
 import ru.danko.testtask.entity.Student;
 import ru.danko.testtask.entity.StudentGroup;
-import ru.danko.testtask.exception.DaoException;
+import ru.danko.testtask.exception.DaoServiceException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -28,7 +28,7 @@ public class EnrollDaoImpl implements EnrollDao {
     }
 
     @Override
-    public Optional<Enroll> findGroupByStudentId(long idStudent) throws DaoException {
+    public Optional<Enroll> findGroupByStudentId(long idStudent) throws DaoServiceException {
         try (Connection connection = DbcpDataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(FIND_ENROLL_BY_STUDENT_ID);
             statement.setLong(1, idStudent);
@@ -40,36 +40,36 @@ public class EnrollDaoImpl implements EnrollDao {
             }
             return enrollOptional;
         } catch (SQLException e) {
-            throw new DaoException("Finding student group by id error", e);
+            throw new DaoServiceException("Finding enroll by id error", e);
         }
     }
 
     @Override
-    public boolean add(Enroll enroll) throws DaoException {
+    public boolean add(Enroll enroll) throws DaoServiceException {
         try (Connection connection = DbcpDataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(ADD_ENROLL)) {
             statement.setLong(1,enroll.getId());
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new DaoException("Add student group error", e);
+            throw new DaoServiceException("Add enroll error", e);
         }
     }
 
     @Override
-    public boolean delete(long id) throws DaoException {
+    public boolean delete(long id) throws DaoServiceException {
         try (Connection connection = DbcpDataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_ENROLL)) {
             statement.setLong(1,id);
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new DaoException("Delete student group error", e);
+            throw new DaoServiceException("Delete enroll error", e);
         }
     }
 
     private Enroll createEnrollFromResultSet(ResultSet resultSet) throws SQLException {
-        Long id = resultSet.getLong(1);
-        Long idStudent = resultSet.getLong(2);
-        Long idGroup = resultSet.getLong(3);
+        long id = resultSet.getLong(1);
+        long idStudent = resultSet.getLong(2);
+        long idGroup = resultSet.getLong(3);
         Student student = new Student();
         student.setId(idStudent);
         StudentGroup studentGroup = new StudentGroup();

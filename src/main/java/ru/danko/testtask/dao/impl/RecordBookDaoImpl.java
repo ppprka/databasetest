@@ -3,7 +3,7 @@ package ru.danko.testtask.dao.impl;
 import ru.danko.testtask.dao.RecordBookDao;
 import ru.danko.testtask.dao.connection.DbcpDataSource;
 import ru.danko.testtask.entity.RecordBook;
-import ru.danko.testtask.exception.DaoException;
+import ru.danko.testtask.exception.DaoServiceException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -45,7 +45,7 @@ public class RecordBookDaoImpl implements RecordBookDao {
     }
 
     @Override
-    public Optional<RecordBook> findById(long id) throws DaoException {
+    public Optional<RecordBook> findById(long id) throws DaoServiceException {
         try (Connection connection = DbcpDataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(FIND_RECORD_BOOK_BY_ID);
             statement.setLong(1, id);
@@ -57,12 +57,12 @@ public class RecordBookDaoImpl implements RecordBookDao {
             }
             return recordBookOptional;
         } catch (SQLException e) {
-            throw new DaoException("Finding record book by id error", e);
+            throw new DaoServiceException("Finding record book by id error", e);
         }
     }
 
     @Override
-    public Optional<RecordBook> findByGraduationYear(String graduationYear) throws DaoException {
+    public Optional<RecordBook> findByGraduationYear(String graduationYear) throws DaoServiceException {
         try (Connection connection = DbcpDataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(FIND_RECORD_BOOK_BY_GRADUATION_YEAR);
             statement.setString(1, graduationYear);
@@ -74,12 +74,12 @@ public class RecordBookDaoImpl implements RecordBookDao {
             }
             return recordBookOptional;
         } catch (SQLException e) {
-            throw new DaoException("Finding record book by graduation year error", e);
+            throw new DaoServiceException("Finding record book by graduation year error", e);
         }
     }
 
     @Override
-    public Optional<RecordBook> findByGroupId(String groupId) throws DaoException {
+    public Optional<RecordBook> findByGroupId(String groupId) throws DaoServiceException {
         try (Connection connection = DbcpDataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(FIND_RECORD_BOOK_BY_GROUP_ID);
             statement.setString(1, groupId);
@@ -91,12 +91,12 @@ public class RecordBookDaoImpl implements RecordBookDao {
             }
             return recordBookOptional;
         } catch (SQLException e) {
-            throw new DaoException("Finding record book by group id error", e);
+            throw new DaoServiceException("Finding record book by group id error", e);
         }
     }
 
     @Override
-    public List<RecordBook> findAll() throws DaoException {
+    public List<RecordBook> findAll() throws DaoServiceException {
         try (Connection connection = DbcpDataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(FIND_ALL);
             ResultSet resultSet = statement.executeQuery();
@@ -107,12 +107,12 @@ public class RecordBookDaoImpl implements RecordBookDao {
             }
             return recordBookList;
         } catch (SQLException e) {
-            throw new DaoException("Finding record book error", e);
+            throw new DaoServiceException("Finding record book error", e);
         }
     }
 
     @Override
-    public boolean add(RecordBook recordBook) throws DaoException {
+    public boolean add(RecordBook recordBook) throws DaoServiceException {
         try (Connection connection = DbcpDataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(ADD_RECORD_BOOK)) {
             statement.setLong(1,recordBook.getId());
@@ -120,12 +120,12 @@ public class RecordBookDaoImpl implements RecordBookDao {
             statement.setString(3, recordBook.getGroup_id());
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new DaoException("Add record book error", e);
+            throw new DaoServiceException("Add record book error", e);
         }
     }
 
     @Override
-    public boolean update(RecordBook recordBook) throws DaoException {
+    public boolean update(RecordBook recordBook) throws DaoServiceException {
         try (Connection connection = DbcpDataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(UPDATE_RECORD_BOOK)) {
             statement.setString(1, recordBook.getGraduationYear());
@@ -133,56 +133,56 @@ public class RecordBookDaoImpl implements RecordBookDao {
             statement.setLong(3,recordBook.getId());
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new DaoException("Update record book error", e);
+            throw new DaoServiceException("Update record book error", e);
         }
     }
 
     @Override
-    public boolean delete(long id) throws DaoException {
+    public boolean delete(long id) throws DaoServiceException {
         try (Connection connection = DbcpDataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(DELETE_RECORD_BOOK)) {
             statement.setLong(1,id);
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new DaoException("Delete record book error", e);
+            throw new DaoServiceException("Delete record book error", e);
         }
     }
 
-    public void findBySameGraduationYear(String graduationYear) throws DaoException {
+    public void findBySameGraduationYear(String graduationYear) throws DaoServiceException {
         try (Connection connection = DbcpDataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(FIND_BY_SAME_GRADUATION_YEAR);
             statement.setString(1, graduationYear);
             ResultSet resultSet = statement.executeQuery();
             int count = 0;
             while (resultSet.next()){
-                Long id = resultSet.getLong(1);
+                long id = resultSet.getLong(1);
                 String name = resultSet.getString(2);
                 String surname = resultSet.getString(3);
                 System.out.println("Id - "+id+", Name - "+name+", Surname - "+surname);
             }
         } catch (SQLException e) {
-            throw new DaoException("Finding record book by id error", e);
+            throw new DaoServiceException("Finding record book by id error", e);
         }
     }
 
-    public void findByCountStudentsInGroup(String num) throws DaoException {
+    public void findByCountStudentsInGroup(String num) throws DaoServiceException {
         try (Connection connection = DbcpDataSource.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(FIND_BY_COUNT_STUDENTS_IN_GROUP);
             statement.setString(1, num);
             ResultSet resultSet = statement.executeQuery();
             int count = 0;
             while (resultSet.next()){
-                Long id = resultSet.getLong(1);
+                long id = resultSet.getLong(1);
                 String number = resultSet.getString(2);
                 System.out.println("Id - "+id+", Number - "+number);
             }
         } catch (SQLException e) {
-            throw new DaoException("Finding record book by id error", e);
+            throw new DaoServiceException("Finding record book by id error", e);
         }
     }
 
     private RecordBook createRecordBookFromResultSet(ResultSet resultSet) throws SQLException {
-        Long id = resultSet.getLong(1);
+        long id = resultSet.getLong(1);
         String graduationYear = resultSet.getString(2);
         String groupId = resultSet.getString(3);
         return new RecordBook(id, graduationYear, groupId);
